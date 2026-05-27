@@ -1,15 +1,13 @@
 #pragma once
 #include "Unit.h"
 #include "Action.h"
+#include <deque>
 
-typedef struct UnitActionStruct_t {
+typedef struct UnitActionQueue_t {
   Unit unit;
-  Action currentAction;
-} UnitActionStruct;
+  deque<Action> *actionQueue;
+} UnitActionQueue;
 
 void act_Register(Unit unit);
 void act_Kill(Unit unit);
-void act_OnFrame();
-void act_Init();
-void act_SetAction(void (*method)(Unit, Action, Action));
 void act_OnGamePrepare();

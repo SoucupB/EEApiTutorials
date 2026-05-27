@@ -42,12 +42,9 @@ void processEnemyAction(Unit unit, Action action) {
 }
 
 void bt_OnFrame() {
-  act_OnFrame();
 }
 
 void bt_OnInit() {
-  act_Init();
-  act_SetAction(onChangeAction);
 }
 
 void bt_OnUnitDestroy(Unit unit) {
