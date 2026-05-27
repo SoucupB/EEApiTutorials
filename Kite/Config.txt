@@ -1,0 +1,4 @@
+game_path=D:\Games\GOGLegit\Empire Earth Gold\Empire Earth - The Art of Conquest
+dll_path=D:\Programs\EEApi\Build\lib
+game_name=EE-AOC.exe
+dll_name=Bots.dll
