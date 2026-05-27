@@ -6,7 +6,6 @@
 
 using namespace std;
 
-void eeTypes_InitUnits();
 uint8_t eeTypes_IsFromClass(UnitClassType unitClass, UnitType unitType);
 uint8_t eeTypes_IsWaterUnit(UnitType unitType);
 uint8_t eeTypes_IsCitizen(UnitType unitType);

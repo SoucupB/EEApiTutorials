@@ -7,6 +7,10 @@ uint8_t isIdleCitizen(Unit unit) {
   return eeTypes_IsCitizen(type) && unit_IsIdle(unit) && unit_IsSelf(unit);
 }
 
+void bt_OnGamePrepare() {
+  
+}
+
 void bt_OnFrame() {
   vector<Unit> units = unit_Filter(isIdleCitizen);
   for(size_t i = 0; i < units.size(); i++) {

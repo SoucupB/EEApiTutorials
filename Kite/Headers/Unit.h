@@ -60,3 +60,5 @@ uint8_t unit_CanCast(Unit unit, AbilityTypes ability);
 void unit_Action(Unit unit, Point point, UnitAction action);
 void unit_Repair(Unit unit, Unit target);
 void unit_Farm(Unit unit, Resource resource);
+Unit unit_FromRerence(PVOID reference);
+uint8_t unit_IsValid(Unit unit);

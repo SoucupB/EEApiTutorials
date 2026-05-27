@@ -23,6 +23,10 @@ void bt_OnUnitDestroy(Unit unit) {
   act_Kill(unit);
 }
 
+void bt_OnGamePrepare() {
+  
+}
+
 void bt_OnUnitCreate(Unit unit) {
   act_Register(unit);
 }
