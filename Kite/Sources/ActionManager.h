@@ -11,3 +11,4 @@ void act_Register(Unit unit);
 void act_Kill(Unit unit);
 void act_OnFrame();
 void act_Init();
+void act_SetAction(void (*method)(Unit, Action, Action));
