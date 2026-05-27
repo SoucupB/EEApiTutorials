@@ -8,14 +8,14 @@ static map<PVOID, UnitActionQueue> unitActions;
 void act_Register(Unit unit) {
   unitActions[unit_Reference(unit)] = (UnitActionQueue) {
     .unit = unit,
-    .actionQueue = new deque<Action>()
+    .actionQueue = new deque<ActionWithFlag>()
   };
 }
 
 void act_Init() {
 }
 
-void act_PushFrontAction(Unit unit, Action action) {
+void act_PushFrontAction(Unit unit, Action action, uint8_t waitForIdle) {
   const PVOID ref = unit_Reference(unit);
   if(unitActions.find(ref) == unitActions.end()) {
     return ;
@@ -23,7 +23,10 @@ void act_PushFrontAction(Unit unit, Action action) {
   if(unitActions[ref].actionQueue->size() >= 7) {
     unitActions[ref].actionQueue->pop_back();
   }
-  unitActions[ref].actionQueue->push_front(action);
+  unitActions[ref].actionQueue->push_front((ActionWithFlag) {
+    .action = action,
+    .waitForIdle = waitForIdle
+  });
 }
 
 void act_OnGamePrepare() {
@@ -102,27 +105,37 @@ uint8_t act_IsIdle(Unit unit) {
   return isIdle;
 }
 
+uint8_t canProceed(Action currentAction, ActionWithFlag queueAction) {
+  if(currentAction.type == ACTION_IDLE && queueAction.waitForIdle) {
+    return 1;
+  }
+  if(queueAction.waitForIdle) {
+    return 0;
+  }
+  return act_AreActionDifferent(currentAction, queueAction.action);
+}
+
 void processAction(UnitActionQueue unitAction, Action currentAction) {
   if(!unitAction.actionQueue->size()) {
     return ;
   }
-  Action queueAction = unitAction.actionQueue->front();
-  if(currentAction.type != ACTION_IDLE) {
+  ActionWithFlag queueAction = unitAction.actionQueue->front();
+  if(!canProceed(currentAction, queueAction)) {
     return ;
   }
   unitAction.actionQueue->pop_front();
-  switch (queueAction.type)
+  switch (queueAction.action.type)
   {
     case ACTION_MOVE: {
-      unit_Action(unitAction.unit, queueAction.targetPoint, UNIT_MOVE);
+      unit_Action(unitAction.unit, queueAction.action.targetPoint, UNIT_MOVE);
       break;
     }
     case ACTION_ATTACK_AREA: {
-      unit_Action(unitAction.unit, queueAction.targetPoint, UNIT_ATTACK);
+      unit_Action(unitAction.unit, queueAction.action.targetPoint, UNIT_ATTACK);
       break;
     }
     case ACTION_ATTACK_TARGET: {
-      unit_AttackTarget(unitAction.unit, queueAction.target);
+      unit_AttackTarget(unitAction.unit, queueAction.action.target);
       break;
     }
     

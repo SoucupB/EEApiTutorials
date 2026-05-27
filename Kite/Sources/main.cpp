@@ -63,7 +63,7 @@ void findAndAttackEnemy(Unit selfUnit, vector<Unit> &enemyUnits) {
   Action currentAction;
   currentAction.type = ACTION_ATTACK_AREA;
   currentAction.targetPoint = unit_Point_Position(enemyUnits[0]);
-  act_PushFrontAction(selfUnit, currentAction);
+  act_PushFrontAction(selfUnit, currentAction, 1);
 }
 
 void processAttackUnits() {
@@ -80,14 +80,14 @@ void processCurrentUnit(Unit selfUnit, vector<Unit> &enemyUnits) {
   for(size_t i = 0; i < enemyUnits.size(); i++) {
     const float currentEnemyRange = unit_Range(enemyUnits[i]);
     const float currentSelfRange = unit_Range(selfUnit);
-    if(currentEnemyRange > currentSelfRange && unit_Distance(selfUnit, enemyUnits[i]) < currentSelfRange * 0.85f) {
+    if(currentEnemyRange > currentSelfRange || unit_Distance(selfUnit, enemyUnits[i]) >= currentSelfRange * 0.9f) {
       continue;
     }
     Point movingPoint = getOpositePosition(unit_Point_Position(selfUnit), unit_Point_Position(enemyUnits[i]));
     Action currentAction;
     currentAction.type = ACTION_MOVE;
     currentAction.targetPoint = movingPoint;
-    act_PushFrontAction(selfUnit, currentAction);
+    act_PushFrontAction(selfUnit, currentAction, 0);
   }
 }
 
