@@ -14,8 +14,11 @@ void act_Register(Unit unit) {
 }
 
 void act_Init() {
-  // unitActions.clear();
-  // onActionChange = NULL;
+}
+
+void act_OnGamePrepare() {
+  unitActions.clear();
+  onActionChange = NULL;
 }
 
 void act_Kill(Unit unit) {
