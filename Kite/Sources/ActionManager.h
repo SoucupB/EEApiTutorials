@@ -11,3 +11,6 @@ typedef struct UnitActionQueue_t {
 void act_Register(Unit unit);
 void act_Kill(Unit unit);
 void act_OnGamePrepare();
+void act_OnFrame();
+void act_PushFrontAction(Unit unit, Action action);
+uint8_t act_IsIdle(Unit unit);
