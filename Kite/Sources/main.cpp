@@ -20,30 +20,6 @@ Point getOpositePosition(Point center, Point rotator) {
   };
 }
 
-// void processSelfUnitAndTarget(Unit selfUnit, Unit enemyUnit) {
-//   const float currentEnemyRange = unit_Range(enemyUnit);
-//   const float currentSelfRange = unit_Range(selfUnit);
-//   if(currentEnemyRange > currentSelfRange && unit_Distance(selfUnit, enemyUnit) < currentSelfRange * 0.85f) {
-//     return ;
-//   }
-//   Point movingPoint = getOpositePosition(unit_Point_Position(selfUnit), unit_Point_Position(enemyUnit));
-//   unit_Action(selfUnit, movingPoint, UNIT_MOVE);
-// }
-
-// void processEnemyAction(Unit unit, Action action) {
-//   if(unit_IsSelf(unit) || ply_AreAllies(ply_GetPlayer(unit), ply_Self())) {
-//     return ;
-//   }
-//   if(action.type != ACTION_ATTACK_TARGET) {
-//     return ;
-//   }
-//   Unit target = action.target;
-//   if(!unit_IsSelf(target)) {
-//     return ;
-//   }
-//   processSelfUnitAndTarget(target, unit);
-// }
-
 uint8_t isUnit(Unit unit) {
   return !eeTypes_IsBuilding(unit_Type(unit));
 }
@@ -77,18 +53,28 @@ void processAttackUnits() {
 }
 
 void processCurrentUnit(Unit selfUnit, vector<Unit> &enemyUnits) {
+  Unit enemyToRunFrom = unit_Null();
+  float maxDistance = 100000.0f;
   for(size_t i = 0; i < enemyUnits.size(); i++) {
     const float currentEnemyRange = unit_Range(enemyUnits[i]);
     const float currentSelfRange = unit_Range(selfUnit);
-    if(currentEnemyRange > currentSelfRange || unit_Distance(selfUnit, enemyUnits[i]) >= currentSelfRange * 0.9f) {
+    const float currentDistance = unit_Distance(selfUnit, enemyUnits[i]);
+    if(currentEnemyRange > currentSelfRange || currentDistance >= currentSelfRange * 0.4f) {
       continue;
     }
-    Point movingPoint = getOpositePosition(unit_Point_Position(selfUnit), unit_Point_Position(enemyUnits[i]));
-    Action currentAction;
-    currentAction.type = ACTION_MOVE;
-    currentAction.targetPoint = movingPoint;
-    act_PushFrontAction(selfUnit, currentAction, 0);
+    if(maxDistance > currentDistance) {
+      maxDistance = currentDistance;
+      enemyToRunFrom = enemyUnits[i];
+    }
   }
+  if(!unit_Reference(enemyToRunFrom)) {
+    return ;
+  }
+  Point movingPoint = getOpositePosition(unit_Point_Position(selfUnit), unit_Point_Position(enemyToRunFrom));
+  Action currentAction;
+  currentAction.type = ACTION_MOVE;
+  currentAction.targetPoint = movingPoint;
+  act_PushFrontAction(selfUnit, currentAction, 0);
 }
 
 void processAttackActions(PVOID _) {

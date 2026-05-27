@@ -135,6 +135,9 @@ void processAction(UnitActionQueue unitAction, Action currentAction) {
       break;
     }
     case ACTION_ATTACK_TARGET: {
+      if(!unit_IsValid(queueAction.action.target)) {
+        return ;
+      }
       unit_AttackTarget(unitAction.unit, queueAction.action.target);
       break;
     }
