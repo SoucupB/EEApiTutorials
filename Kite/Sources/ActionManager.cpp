@@ -1,23 +1,21 @@
 #include "ActionManager.h"
-#include <unordered_map>
+#include <map>
 #include <windows.h>
 #include "SimpleUnit.h"
 
-static unordered_map<PVOID, UnitActionStruct> unitActions;
+static map<PVOID, UnitActionStruct> unitActions;
 static void (*onActionChange)(Unit, Action, Action);
 
 void act_Register(Unit unit) {
   unitActions[unit_Reference(unit)] = (UnitActionStruct) {
     .unit = unit,
-    .currentAction = (Action) {
-      .type = ACTION_IDLE
-    }
+    .currentAction = act_Get(unit)
   };
 }
 
 void act_Init() {
-  unitActions.clear();
-  onActionChange = NULL;
+  // unitActions.clear();
+  // onActionChange = NULL;
 }
 
 void act_Kill(Unit unit) {
@@ -46,15 +44,21 @@ uint8_t act_AreActionDifferent(Action a, Action b) {
   }
   switch (a.type)
   {
-    case ACTION_MOVE:
+    case ACTION_MOVE: {
+      return act_ArePointsDifferent(a.targetPoint, b.targetPoint);
+    }
     case ACTION_ATTACK_AREA: {
       return act_ArePointsDifferent(a.targetPoint, b.targetPoint);
     }
     case ACTION_CAST_AREA: {
       return act_Tile_ArePointsDifferent(a.targetTile, b.targetTile);
     }
-    case ACTION_REPAIR:
-    case ACTION_CAST_TARGET:
+    case ACTION_REPAIR: {
+      return act_IsTargetDiff(a.target, b.target);
+    }
+    case ACTION_CAST_TARGET: {
+      return act_IsTargetDiff(a.target, b.target);
+    }
     case ACTION_ATTACK_TARGET: {
       return act_IsTargetDiff(a.target, b.target);
     }
@@ -74,7 +78,6 @@ void act_OnFrame() {
     if(!onActionChange || !act_AreActionDifferent(currentAction, it.second.currentAction)) {
       continue;
     }
-    
     onActionChange(it.second.unit, currentAction, it.second.currentAction);
     unitActions[it.first] = (UnitActionStruct) {
       .unit = it.second.unit,
