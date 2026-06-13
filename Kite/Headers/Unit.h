@@ -5,14 +5,41 @@
 
 typedef struct Unit_t Unit;
 
+/*
+ * Returns 1 if unit is dead or 0 if not.
+ */
 int8_t unit_IsDead(Unit unit);
+/*
+ * Gets an array of buildings from a specific player index.
+ */
 vector<Unit> unit_GetBuildings(int8_t player);
+/*
+ * Gets an array of units from a specific player index.
+ */
 vector<Unit> unit_GetUnits(int8_t player);
+/*
+ * Returns a type of unit if the current building is researching something. If its idle it will return the IDLE from EETypesStruct.
+ */
 int32_t unit_CurrentlyBuilding(Unit building);
+/*
+ * Checks if the unit is a building. 1 for yes and 0 for no.
+ */
 int8_t unit_IsBuilding(Unit unit);
+/*
+ * Gets unit tile position.
+ */
 TilePoint unit_Tile_Position(Unit unit);
+/*
+ * Gets the plane ID of the tile the unit is standing on.
+ */
 uint16_t unit_GetPlaneID(Unit unit);
+/*
+ * Cast an ability to a point, such as earthquake, volcano or hurricane.
+ */
 void unit_Point_CastAbility(Unit unit, Point target, AbilityTypes ability);
+/*
+ * Gets the unit type of the unit param.
+ */
 UnitType unit_Type(Unit unit);
 int32_t unit_CurrentHp(Unit unit);
 int32_t unit_TotalHP(Unit unit);
@@ -62,3 +89,5 @@ void unit_Repair(Unit unit, Unit target);
 void unit_Farm(Unit unit, Resource resource);
 Unit unit_FromRerence(PVOID reference);
 uint8_t unit_IsValid(Unit unit);
+void unit_Costs(Unit unit, ResourceCost *costs, uint8_t *resCount);
+void unit_Stop(Unit unit);
