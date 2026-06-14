@@ -4,12 +4,6 @@
 #include "EETwa.h"
 #include "Player.h"
 
-// void processEnemyAction(Unit unit, Action action);
-
-// void onChangeAction(Unit unit, Action newAction, Action oldAction) {
-//   processEnemyAction(unit, newAction);
-// }
-
 uint8_t isSelfUnitChecker(Unit unit);
 void processGameActions();
 
