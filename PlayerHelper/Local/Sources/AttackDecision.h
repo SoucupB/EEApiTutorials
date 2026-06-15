@@ -22,3 +22,4 @@ void att_HuntWithHades(PVOID _);
 void initBomberHunters(PVOID _);
 void replaceMoveCommandForFliers(PVOID _);
 void att_HuntWithAirplaneStorm(PVOID _);
+void att_AttackWithMechs(PVOID _);

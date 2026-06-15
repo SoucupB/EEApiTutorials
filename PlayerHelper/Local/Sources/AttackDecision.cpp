@@ -348,8 +348,13 @@ uint8_t isTower(Unit unit) {
   return 0;
 }
 
+uint8_t isNavalBuilding(Unit unit) {
+  const UnitType type = unit_Type(unit);
+  return type == B_DOCK || type == B_NAVY_YARD;
+}
+
 uint8_t isEnemyTower(Unit unit) {
-  return unit_GetPlayerIndex(unit) != eeTa_SelfPlayer() && !ply_Index_AreAllies(unit_GetPlayerIndex(unit), eeTa_SelfPlayer()) && unit_GetPlayerIndex(unit) != eeTa_NeutralPlayer() && isTower(unit);
+  return unit_GetPlayerIndex(unit) != eeTa_SelfPlayer() && !ply_Index_AreAllies(unit_GetPlayerIndex(unit), eeTa_SelfPlayer()) && unit_GetPlayerIndex(unit) != eeTa_NeutralPlayer() && isNavalBuilding(unit);
 }
 
 uint8_t att_IsUnitCarrier(Unit unit) {
@@ -395,6 +400,65 @@ uint8_t enemyFlyingUnits(Unit unit) {
 
 uint8_t enemyBuilding(Unit unit) {
   return unit_GetPlayerIndex(unit) != eeTa_SelfPlayer() && !ply_Index_AreAllies(unit_GetPlayerIndex(unit), eeTa_SelfPlayer()) && unit_GetPlayerIndex(unit) != eeTa_NeutralPlayer() && unit_IsBuilding(unit);
+}
+
+uint8_t isAttackingMech(Unit unit) {
+  const UnitType type = unit_Type(unit);
+  return isMechUnit(unit) && type != MECH_APOLLO && type != MECH_HADES;
+}
+
+uint8_t isSelfAttackingMech(Unit unit) {
+  return unit_IsSelf(unit) && isAttackingMech(unit);
+}
+
+Point findEnemyBuildingPosition(Point cPoint) {
+  vector<Unit> enemyBuildings = unit_Filter(enemyBuilding);
+  float distanceF = 1000000.0f;
+  Point response = geom_Point_Invalid();
+  for(size_t i = 0; i < enemyBuildings.size(); i++) {
+    Point pos = unit_Point_Position(enemyBuildings[i]);
+    float cDistance = geom_DistanceEuclidf(pos, cPoint);
+    if(cDistance < distanceF) {
+      distanceF = cDistance;
+      response = pos;
+    }
+  }
+  return response;
+}
+
+void att_AttackWithMechs(PVOID _) {
+  vector<Unit> mechs = unit_Filter(isSelfAttackingMech);
+  if(mechs.size() < 13) {
+    return ;
+  }
+  Point midPos = (Point) {
+    .x = 0.0f,
+    .y = 0.0f
+  };
+  for(size_t i = 0; i < mechs.size(); i++) {
+    Point currentPos = unit_Point_Position(mechs[i]);
+    midPos.x += currentPos.x;
+    midPos.y += currentPos.y;
+  }
+  midPos.x /= (float)mechs.size();
+  midPos.y /= (float)mechs.size();
+  Point enemyBuilding = findEnemyBuildingPosition(midPos);
+  if(geom_Point_IsInvalid(enemyBuilding)) {
+    return ;
+  }
+  uint16_t enemyBuildingTileID = map_Tile_GetPlaneID(geom_Tile_FromPoint(enemyBuilding));
+  for(size_t i = 0; i < mechs.size(); i++) {
+    UnitType type = unit_Type(mechs[i]);
+    if(type == MECH_HYPERION_II || type == MECH_HYPERION) {
+      unit_Action(mechs[i], enemyBuilding, UNIT_ATTACK);
+      continue;
+    }
+    uint16_t mechBuildingTileID = map_Tile_GetPlaneID(unit_Tile_Position(mechs[i]));
+    if(mechBuildingTileID != enemyBuildingTileID) {
+      continue;
+    }
+    unit_Action(mechs[i], enemyBuilding, UNIT_ATTACK);
+  }
 }
 
 void att_AttackWithBombers(PVOID _) {

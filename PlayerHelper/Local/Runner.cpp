@@ -286,6 +286,14 @@ void bt_RebuildMissingBuildings() {
   eeTa_AddFrameMethod(atom);
 }
 
+void bt_AttackWithMechUnits() {
+  TimeAtom atom;
+  atom.method = (PVOID)att_AttackWithMechs;
+  atom.arguments = NULL;
+  atom.time = 14222;
+  eeTa_AddFrameMethod(atom);
+}
+
 void bt_OnUnitDestroy(Unit unit) {
   citizen_DeleteBuilding(unit);
 }
@@ -371,6 +379,7 @@ void bt_OnInit() {
   bt_InitAirplaneActions();
   bt_InitBomberHunters();
   bt_InitPlaneHunterStorm();
+  bt_AttackWithMechUnits();
   pls_OnInit(att_AddDamagedUnits);
   // bt_InitPlaneHunters();
 }
