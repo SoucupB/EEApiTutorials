@@ -23,3 +23,4 @@ void initBomberHunters(PVOID _);
 void replaceMoveCommandForFliers(PVOID _);
 void att_HuntWithAirplaneStorm(PVOID _);
 void att_AttackWithMechs(PVOID _);
+void att_Build();

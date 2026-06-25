@@ -20,6 +20,10 @@ uint8_t attackingWaterUnits(Unit unit);
 uint8_t isSelfUnit(Unit unit);
 uint8_t attackingGroundUnits(Unit unit);
 
+void att_Build() {
+  attackedUnits.clear();
+}
+
 size_t min(size_t a, size_t b) {
   return a < b ? a : b;
 }

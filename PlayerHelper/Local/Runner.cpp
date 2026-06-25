@@ -357,7 +357,8 @@ void bt_OnUnitCreate(Unit unit) {
 }
 
 void bt_OnGamePrepare() {
-  
+  att_Build();
+  citizen_Create();
 }
 
 void bt_OnInit() {

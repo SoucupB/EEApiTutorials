@@ -19,6 +19,10 @@ uint8_t canCitizenBeRequested(Unit unit) {
   return unit_IsIdle(unit) || act_IsWaitingToGather(unit); 
 }
 
+void citizen_Create() {
+  buildings.clear();
+}
+
 void citizen_RepairBuildings(PVOID _) {
   vector<Unit> needyBuildings = unit_Filter(needyBuilding);
   if(!needyBuildings.size()) {
@@ -43,6 +47,7 @@ uint8_t citizen_BuildMissingBuilding(Unit citizen) {
       continue;
     }
     if(unit_CanBuild(citizen, it.second.unitType)) {
+      eeTa_PrintfLine("Citizen %p is rebuilding %p", unit_Reference(citizen), it.second.unitType);
       unit_Building_Build(citizen, tile, it.second.unitType);
     }
     buildings.erase(it.first);
