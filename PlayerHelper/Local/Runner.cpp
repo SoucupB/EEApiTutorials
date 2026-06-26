@@ -6,6 +6,7 @@
 #include "Unit.h"
 #include "EETypes.h"
 #include "CitizenManager.h"
+#include <iostream>
 
 typedef struct SpawnLocation_t {
   TilePoint point;
@@ -133,7 +134,7 @@ void bt_BuildWorkers(PVOID attr) {
   }
 }
 
-string convertToHex(int number) {
+std::string convertToHex(int number) {
   char buffer[100] = {0};
   sprintf(buffer, "%x", number);
   return std::string(buffer);
