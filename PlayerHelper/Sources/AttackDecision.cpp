@@ -505,6 +505,7 @@ vector<vector<Unit> > getSplittedUnits(vector<Unit> &units, uint32_t totalUnits)
 
 void att_FillTransports(TilePoint capitolPoint) {
   uint16_t capitolID = map_Tile_GetPlaneID(capitolPoint);
+  eeTa_PrintfLine("Loading unit from tile ID %d\n", capitolID); // capitolID
   vector<Unit> insularUnits = unit_FilterWithBuffer(groundUnitsCapitor, (PVOID)&capitolID);
   uint32_t totalUnits = 6;
   if(insularUnits.size() <= 25) {

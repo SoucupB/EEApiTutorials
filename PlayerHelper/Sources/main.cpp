@@ -383,5 +383,4 @@ void bt_OnInit() {
   bt_InitPlaneHunterStorm();
   bt_AttackWithMechUnits();
   pls_OnInit(att_AddDamagedUnits);
-  // bt_InitPlaneHunters();
 }
