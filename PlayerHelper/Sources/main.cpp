@@ -347,10 +347,12 @@ void initCapitolPositions() {
     if(!eeTypes_CanProduceWorkers(unit_Type(units[i]))) {
       continue;
     }
-    capitolsLocations.push_back((SpawnLocation) {
+    SpawnLocation loc = (SpawnLocation) {
       .point = unit_Tile_Position(units[i]),
       .player = unit_GetPlayerIndex(units[i])
-    });
+    };
+    capitolsLocations.push_back(loc);
+    eeTa_PrintfLine("Player %d (%d, %d) tile ID %d", loc.player, loc.point.x, loc.point.y, unit_GetPlaneID(units[i]));
   }
 }
 
