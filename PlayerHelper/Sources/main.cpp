@@ -105,7 +105,7 @@ void buildAirCarrierUnits(PVOID attr) {
     if(!types.size()) {
       continue;
     }
-    unit_Build(naval, types[rand() % types.size()]);
+    unit_Building_Train(naval, types[rand() % types.size()]);
   }
 }
 
@@ -126,7 +126,7 @@ void bt_BuildWorkers(PVOID attr) {
   int32_t maxBuildings = 3;
   for(int32_t i = 0, c = capitols.size(); i < c; i++) {
     Unit building = capitols[i];
-    unit_Build(building, (UnitType)CITIZEN);
+    unit_Building_Train(building, (UnitType)CITIZEN);
     if(!maxBuildings) {
       break;
     }
