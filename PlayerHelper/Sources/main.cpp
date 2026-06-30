@@ -84,7 +84,7 @@ void buildUnit_t(PVOID attr) {
     if(!types.size()) {
       continue;
     }
-    unit_Build(building, types[rand() % types.size()]);
+    unit_Building_Train(building, types[rand() % types.size()]);
     if(!maxBuildings) {
       break;
     }

@@ -192,7 +192,7 @@ void unit_AttackTarget(Unit attacker, Unit target);
 /*
  * Orders a building to build a unit type. It works only if the building can do that.
  */
-void unit_Build(Unit building, UnitType type);
+void unit_Building_Train(Unit building, UnitType type);
 /*
  * Orders a citizen to start a building at a position. This only works if the worker can actually build it there as if it was the user ordering that operation
  */
