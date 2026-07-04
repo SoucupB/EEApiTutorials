@@ -33,3 +33,8 @@ uint8_t map_Tile_IsSpace(TilePoint self);
  * This is a functionality whic either calls "map_Tile_IsSpace" or "map_Tile_IsWater" depending on the type of map.
  */
 uint8_t map_Tile_IsSpecialTerrain(TilePoint self);
+/*
+ * Gets all the tiles from the map. Tils in this game weirdly rotated 90 degrees. You can check how they look by entering
+ * the game editor and press "t".
+ */
+vector<TileStruct> map_GetTiles();

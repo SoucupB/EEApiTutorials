@@ -16,6 +16,11 @@ typedef struct Circle_t {
   float radius;
 } Circle;
 
+typedef struct TileStruct_t {
+  PVOID ref; // unique address. Its just unique.
+  TilePoint tile;
+} TileStruct;
+
 /*
  * Gets the closest unit from "unit". Only the units on which filter(Unit) returns 1 are tested.
  */
