@@ -1,5 +1,4 @@
-g++ -std=gnu++11 -IHeaders/ -c Sources/main.cpp -o lib/main.o -O9
-
-g++ -std=gnu++11 -IHeaders/ -Wl,--whole-archive lib/Engine.a -Wl,--no-whole-archive lib/main.o -shared -o lib/Bots.dll -O9 -lPsapi -lgdi32 -luser32 -lmsvcrt
+mingw32-make -f Mafile.mk
+if errorlevel 1 exit /b 1
 
 GameInjector.exe

@@ -51,3 +51,7 @@ void eeTa_FilePrintf(const char *format, ...);
  * Add a cheat for the self bot.
  */
 void eeTa_AddCheat(Cheat cheat);
+/*
+ * Method to print to the game chat
+ */
+void eeTa_PrintfLine(const char *format, ...);
