@@ -63,8 +63,52 @@ int8_t shouldBuildWorkers() {
   return (float)currentPop < (float)ply_TotalPop(ply_Self()) * 0.4f;
 }
 
+uint8_t type_IsCarrier(UnitType type) {
+  return eeTypes_IsFromClass(CLASS_WATER_CARRIERS, type) || eeTypes_IsFromClass(CLASS_SPACE_CARRIER, type);
+}
+
 uint8_t navalAirCarrierFilter(Unit unit) {
   return att_IsUnitCarrier(unit);
+}
+
+uint8_t myCarriers(Unit unit) {
+  return unit_IsSelf(unit) && att_IsUnitCarrier(unit);
+}
+
+UnitType navalYardExtractWithoutCarriers(Unit building, vector<UnitType> &types) {
+  vector<UnitType> currentTypes;
+  for(size_t i = 0, c = types.size(); i < c; i++) {
+    if(!type_IsCarrier(types[i])) {
+      currentTypes.push_back(types[i]);
+    }
+  }
+  if(!currentTypes.size()) {
+    return UNIT_UNDEFINED;
+  }
+  return currentTypes[rand() % currentTypes.size()];
+}
+
+UnitType navalYardBuildables(Unit building) {
+  vector<Unit> carriers = unit_Filter(myCarriers);
+  vector<UnitType> types = unit_AllBuildableTypes(building);
+  if(!types.size()) {
+    return UNIT_UNDEFINED;
+  }
+  if(carriers.size() >= 1) {
+    return navalYardExtractWithoutCarriers(building, types);
+  }
+  return types[rand() % types.size()];
+}
+
+UnitType getTypeToBuild(Unit building) {
+  if(unit_Type(building) == B_NAVY_YARD) {
+    return navalYardBuildables(building);
+  }
+  vector<UnitType> types = unit_AllBuildableTypes(building);
+  if(!types.size()) {
+    return UNIT_UNDEFINED;
+  }
+  return types[rand() % types.size()];
 }
 
 void buildUnit_t(PVOID attr) {
@@ -80,11 +124,11 @@ void buildUnit_t(PVOID attr) {
     if(eeTypes_CanProduceWorkers(unit_Type(building))) {
       continue;
     }
-    vector<UnitType> types = unit_AllBuildableTypes(building);
-    if(!types.size()) {
+    UnitType type = getTypeToBuild(building);
+    if(type == UNIT_UNDEFINED) {
       continue;
     }
-    unit_Building_Train(building, types[rand() % types.size()]);
+    unit_Building_Train(building, type);
     if(!maxBuildings) {
       break;
     }
@@ -162,7 +206,7 @@ void bt_InitBuildingCreation() {
   TimeAtom atom;
   atom.method = (PVOID)buildUnit_t;
   atom.arguments = NULL;
-  atom.time = 5048;
+  atom.time = 3567;
   eeTa_AddFrameMethod(atom);
 }
 
